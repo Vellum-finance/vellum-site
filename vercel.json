@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/skill", "destination": "/skill.html" },
-    { "source": "/protocol", "destination": "/protocol.html" },
-    { "source": "/docs", "destination": "/docs.html" },
-    { "source": "/dashboard", "destination": "/dashboard.html" }
-  ]
-}
