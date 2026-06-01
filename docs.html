@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELLUM DOCS — Full Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3E5AB;--panel:#FDF8EC;--panel-2:#FAF3D3;--ink:#1A1410;--ink-2:#3D3020;--ink-3:#6B5B3E;--ink-4:#A89070;--amber:#C4820A;--amber-dim:rgba(196,130,10,0.08);--line:rgba(26,20,16,0.15);--line-2:rgba(26,20,16,0.08);--green:#4CAF50;--maxw:1100px;--mono:'VT323',monospace;--body:'DM Sans',sans-serif;--code:'Share Tech Mono',monospace;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(26,20,16,0.03) 2px,rgba(26,20,16,0.03) 4px);}
+#vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 50%,rgba(26,20,16,0.18) 100%);}
+nav,main,footer,.docs-layout{position:relative;z-index:10;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;background:rgba(243,229,171,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:var(--mono);font-size:1.6rem;color:var(--ink);letter-spacing:0.12em;text-decoration:none;}
+.nav-logo .blink{color:var(--amber);animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:1.8rem;list-style:none;align-items:center;}
+.nav-links a{text-decoration:none;font-family:var(--code);font-size:0.8rem;color:var(--ink-3);letter-spacing:0.08em;text-transform:uppercase;transition:color 0.15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--amber);}
+.nav-badge{font-family:var(--code);font-size:0.72rem;padding:0.3rem 0.9rem;border:1px solid var(--amber);color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;background:var(--amber-dim);transition:all 0.15s;text-decoration:none;}
+.nav-badge:hover{background:var(--amber);color:var(--bg);}
+.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse-dot 2s ease infinite;vertical-align:middle;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,0.4)}50%{box-shadow:0 0 0 5px rgba(76,175,80,0)}}
+.docs-layout{display:grid;grid-template-columns:220px 1fr;max-width:var(--maxw);margin:0 auto;padding-top:52px;min-height:100vh;}
+.docs-sidebar{padding:2rem 1.5rem;border-right:1px solid var(--line);position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;}
+.sidebar-section{margin-bottom:1.8rem;}
+.sidebar-heading{font-family:var(--code);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-4);margin-bottom:0.6rem;padding-bottom:0.4rem;border-bottom:1px solid var(--line);}
+.sidebar-link{display:block;font-family:var(--code);font-size:0.72rem;letter-spacing:0.06em;color:var(--ink-3);text-decoration:none;padding:0.25rem 0;transition:color 0.15s;}
+.sidebar-link:hover,.sidebar-link.active{color:var(--amber);}
+.docs-content{padding:3rem 2.5rem 4rem;}
+.doc-section{margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--line);}
+.doc-section:last-child{border-bottom:none;}
+.doc-section-tag{font-family:var(--code);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem;display:block;}
+.doc-section-title{font-family:var(--mono);font-size:2rem;letter-spacing:0.06em;color:var(--ink);margin-bottom:1rem;line-height:1.1;}
+.doc-section-body{font-size:0.92rem;color:var(--ink-3);line-height:1.85;}
+.doc-section-body p{margin-bottom:0.8rem;}
+.doc-section-body strong{color:var(--ink);font-weight:500;}
+.code-block{background:rgba(26,20,16,0.06);border:1px solid var(--line);overflow:hidden;margin:1.2rem 0;}
+.code-topbar{display:flex;align-items:center;justify-content:space-between;padding:0.45rem 1rem;border-bottom:1px solid var(--line);background:var(--panel-2);position:relative;}
+.code-dots{display:flex;gap:5px;}
+.cdot{width:9px;height:9px;border-radius:50%;}
+.cdot-r{background:rgba(220,80,80,0.5);}
+.cdot-y{background:rgba(220,180,50,0.5);}
+.cdot-g{background:rgba(80,180,80,0.5);}
+.code-fname{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--code);font-size:0.65rem;color:var(--ink-4);letter-spacing:0.08em;white-space:nowrap;}
+.copy-btn{font-family:var(--code);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.12rem 0.5rem;border:1px solid var(--line);color:var(--ink-4);background:transparent;cursor:pointer;transition:all 0.15s;}
+.copy-btn:hover{border-color:var(--amber);color:var(--amber);}
+.copy-btn.ok{border-color:#4CAF50;color:#4CAF50;}
+.code-body{padding:1.1rem 1.3rem;font-family:var(--code);font-size:0.8rem;line-height:1.9;color:var(--ink-3);overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.ck{color:var(--amber);}
+.cs{color:#6B8E5E;}
+.cc{color:var(--ink-4);font-style:italic;}
+.cmd-table{width:100%;border-collapse:collapse;margin:1rem 0;}
+.cmd-table th{font-family:var(--code);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-4);padding:0.5rem 0.8rem;text-align:left;border-bottom:1px solid var(--line);background:var(--panel-2);}
+.cmd-table td{font-family:var(--code);font-size:0.78rem;color:var(--ink-3);padding:0.65rem 0.8rem;border-bottom:1px solid var(--line-2);vertical-align:top;}
+.cmd-table tr:last-child td{border-bottom:none;}
+.cmd-table td:first-child{color:var(--amber);}
+footer{border-top:1px solid var(--line);padding:2rem;max-width:var(--maxw);margin:0 auto;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-logo{font-family:var(--mono);font-size:1.2rem;color:var(--ink-3);letter-spacing:0.1em;}
+.footer-links{display:flex;gap:1.5rem;align-items:center;}
+.footer-links a{font-family:var(--code);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);text-decoration:none;transition:color 0.15s;}
+.footer-links a:hover{color:var(--amber);}
+.x-link{display:inline-flex;align-items:center;color:var(--ink-4);text-decoration:none;transition:color 0.15s;}
+.x-link:hover{color:var(--amber);}
+.footer-copy{font-family:var(--code);font-size:0.65rem;color:var(--ink-4);}
+@media(max-width:768px){.docs-layout{grid-template-columns:1fr;}.docs-sidebar{display:none;}.docs-content{padding:2rem 1.2rem 3rem;}}
+@media(max-width:640px){nav{padding:0 1rem;}.nav-links{gap:0.8rem;}.nav-links li.hide-sm{display:none;}.code-body{font-size:0.72rem;}footer{padding:1.5rem 1rem;}.footer-inner{flex-direction:column;align-items:flex-start;}}
+
+
+/* ═══════════════════════════════════════
+   BEZEL / PILL BORDER-RADIUS SYSTEM
+═══════════════════════════════════════ */
+:root{
+  --radius-pill: 999px;    /* full pill — badge, dot, input */
+  --radius-lg:   18px;     /* panel card, code block */
+  --radius-md:   12px;     /* inner header bar, feature tile */
+  --radius-sm:   8px;      /* small badge, status tag, btn */
+  --gap-card:    1.6rem;   /* spacing between cards */
+}
+
+/* ── Cards / Panels ──────────────────────────────────── */
+.panel{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  margin-bottom: var(--gap-card) !important;
+}
+.panel-header{
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+}
+.code-block{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+.code-topbar{
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+}
+
+/* ── Feature grid tiles ──────────────────────────────── */
+.feature-grid{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  gap: 2px !important;
+}
+.feature-tile{
+  border-radius: 0 !important;
+}
+/* Corner tiles get radius */
+.feature-tile:first-child{ border-radius: var(--radius-lg) 0 0 var(--radius-lg) !important; }
+.feature-tile:last-child{  border-radius: 0 var(--radius-lg) var(--radius-lg) 0 !important; }
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn-primary,
+.btn-outline{
+  border-radius: var(--radius-pill) !important;
+  padding-left: 2.2rem !important;
+  padding-right: 2.2rem !important;
+}
+
+/* ── Nav badge / Dashboard pill ──────────────────────── */
+.nav-badge{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.3rem 1.1rem !important;
+}
+
+/* ── Panel badges ────────────────────────────────────── */
+.panel-badge{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.18rem 0.85rem !important;
+}
+
+/* ── Roadmap status tags ─────────────────────────────── */
+[class*="roadmap-status"],
+.roadmap-status,
+.roadmap-status.done-tag,
+.roadmap-status.active-tag,
+.roadmap-status.soon-tag-sm,
+.soon-tag{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.18rem 0.8rem !important;
+}
+
+/* ── Agent pills ─────────────────────────────────────── */
+.agent-pill{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Copy button ─────────────────────────────────────── */
+.copy-btn,
+.notify-btn,
+#copy-btn{
+  border-radius: var(--radius-sm) !important;
+}
+
+/* ── Notify form ─────────────────────────────────────── */
+.notify-form{
+  border-radius: var(--radius-pill) !important;
+  overflow: hidden;
+}
+.notify-input{
+  border-radius: var(--radius-pill) 0 0 var(--radius-pill) !important;
+}
+.notify-btn{
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0 !important;
+}
+
+/* ── Inline tech spec badges (agent-compat pills) ─────── */
+[style*="border:1px solid var(--amber)"][style*="padding:0.3rem"]{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Dashboard preview tiles ─────────────────────────── */
+.preview-grid{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  gap: 2px !important;
+  background: rgba(243,229,171,0.15) !important;
+}
+.preview-tile{
+  border-radius: 0 !important;
+}
+.preview-tile:first-child{ border-radius: var(--radius-lg) 0 0 0 !important; }
+.preview-tile:last-child{  border-radius: 0 var(--radius-lg) 0 0 !important; }
+
+/* ── Diagram rows ────────────────────────────────────── */
+.diag-row:first-child{ border-radius: var(--radius-md) var(--radius-md) 0 0 !important; }
+.diag-row:last-child{  border-radius: 0 0 var(--radius-md) var(--radius-md) !important; }
+
+/* ── Terminal window inner container ─────────────────── */
+[style*="background:rgba(26,20,16,0.06)"],
+[style*="background: rgba(26,20,16,0.06)"]{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+
+/* ── Page hero border bottom stays flat ─────────────────*/
+.page-hero, .dash-hero{ border-radius: 0 !important; }
+
+/* ── Dashboard coming-soon card ──────────────────────── */
+.dash-coming{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  margin-bottom: var(--gap-card) !important;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+footer{ border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important; margin-top: 1rem; }
+
+/* ── Spacing between sections ────────────────────────── */
+.divider{ margin: 2.2rem 0 !important; }
+.panel + .divider,
+.divider + .panel{ margin-top: 0.8rem !important; }
+
+/* ── Sidebar bezel ───────────────────────────────────── */
+#vl-sidebar{
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0 !important;
+}
+.vl-sb-link{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Docs sidebar links ──────────────────────────────── */
+.sidebar-link{ border-radius: var(--radius-pill) !important; padding: 0.28rem 0.8rem !important; }
+.sidebar-link:hover,.sidebar-link.active{ background: var(--amber-dim) !important; }
+
+/* ── Cmd table cells (docs) ──────────────────────────── */
+.cmd-table th:first-child{ border-radius: var(--radius-md) 0 0 0 !important; }
+.cmd-table th:last-child{  border-radius: 0 var(--radius-md) 0 0 !important; }
+
+/* ── Inline terminal from index/skill ───────────────────*/
+div[style*="border:1px solid var(--line)"][style*="overflow:hidden"]{
+  border-radius: var(--radius-lg) !important;
+}
+
+/* ═══════════════════════════════════════
+   LEFT SIDEBAR NAV
+═══════════════════════════════════════ */
+#vl-sidebar{
+  position:fixed;top:0;left:0;bottom:0;z-index:200;
+  width:220px;transform:translateX(-100%);
+  background:rgba(243,229,171,0.97);backdrop-filter:blur(20px);
+  border-right:1px solid rgba(26,20,16,0.15);
+  display:flex;flex-direction:column;
+  padding:0;
+  transition:transform 0.28s cubic-bezier(.4,0,.2,1);
+  box-shadow:4px 0 24px rgba(26,20,16,0.08);
+}
+#vl-sidebar.open{transform:translateX(0);}
+.vl-sb-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.2rem;height:52px;
+  border-bottom:1px solid rgba(26,20,16,0.12);flex-shrink:0;
+}
+.vl-sb-logo{font-family:var(--mono);font-size:1.4rem;color:var(--ink);letter-spacing:0.12em;text-decoration:none;}
+.vl-sb-logo .blink{color:var(--amber);animation:blink 1.2s step-end infinite;}
+.vl-sb-close{background:none;border:none;cursor:pointer;color:var(--ink-4);padding:4px;display:flex;align-items:center;transition:color 0.15s;}
+.vl-sb-close:hover{color:var(--amber);}
+.vl-sb-body{flex:1;overflow-y:auto;padding:1.4rem 1.2rem;}
+.vl-sb-section{margin-bottom:1.8rem;}
+.vl-sb-section-label{
+  font-family:var(--code);font-size:0.58rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--ink-4);margin-bottom:0.6rem;
+  display:block;padding-bottom:0.4rem;border-bottom:1px solid rgba(26,20,16,0.1);
+}
+.vl-sb-link{
+  display:flex;align-items:center;gap:0.6rem;
+  font-family:var(--code);font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  padding:0.45rem 0.7rem;border-radius:5px;
+  transition:all 0.15s;margin-bottom:2px;
+}
+.vl-sb-link:hover{background:var(--amber-dim);color:var(--amber);}
+.vl-sb-link.active{background:var(--amber-dim);color:var(--amber);border-left:2px solid var(--amber);padding-left:calc(0.7rem - 2px);}
+.vl-sb-link .vl-icon{font-size:1rem;line-height:1;width:18px;text-align:center;flex-shrink:0;}
+.vl-sb-badge{
+  font-family:var(--code);font-size:0.6rem;letter-spacing:0.08em;
+  padding:0.1rem 0.5rem;border-radius:4px;margin-left:auto;
+  border:1px solid var(--amber);color:var(--amber);background:var(--amber-dim);
+}
+.vl-sb-footer{
+  padding:1rem 1.2rem;border-top:1px solid rgba(26,20,16,0.1);
+  flex-shrink:0;
+}
+.vl-sb-socials{display:flex;gap:0.8rem;align-items:center;}
+.vl-sb-socials a{color:var(--ink-4);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;}
+.vl-sb-socials a:hover{color:var(--amber);}
+.vl-sb-copy{font-family:var(--code);font-size:0.6rem;color:var(--ink-4);margin-top:0.6rem;}
+
+/* Sidebar toggle button (top-left, always visible) */
+#vl-toggle{
+  position:fixed;top:12px;left:12px;z-index:300;
+  background:rgba(243,229,171,0.9);border:1px solid rgba(26,20,16,0.15);
+  border-radius:6px;width:30px;height:28px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+  cursor:pointer;transition:all 0.15s;padding:0;backdrop-filter:blur(8px);
+}
+#vl-toggle:hover{border-color:var(--amber);background:var(--amber-dim);}
+#vl-toggle span{display:block;width:14px;height:1.5px;background:var(--ink);border-radius:2px;transition:all 0.2s;}
+#vl-toggle.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+#vl-toggle.open span:nth-child(2){opacity:0;}
+#vl-toggle.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+/* Overlay backdrop */
+#vl-overlay{
+  position:fixed;inset:0;z-index:150;background:rgba(26,20,16,0.3);
+  opacity:0;pointer-events:none;transition:opacity 0.28s;backdrop-filter:blur(2px);
+}
+#vl-overlay.show{opacity:1;pointer-events:auto;}
+
+/* Nav: push logo right to make room for toggle btn */
+nav{padding-left:3.2rem !important;}
+
+</style>
+<style>
+/* extra breathing room */
+main > .panel,
+main > .feature-grid,
+main > .dash-coming{margin-bottom:1.8rem !important;}
+.roadmap-item{gap:1rem !important;padding:1.1rem 0 !important;}
+.feature-row{gap:1.6rem !important;padding:1.4rem 0 !important;}
+.panel-body{padding:1.6rem !important;}
+</style>
+</head>
+<body>
+<!-- VL SIDEBAR OVERLAY -->
+<div id="vl-overlay"></div>
+
+<!-- VL SIDEBAR -->
+<div id="vl-sidebar" role="navigation" aria-label="Site navigation">
+  <div class="vl-sb-header">
+    <a href="index.html" class="vl-sb-logo">VL<span class="blink">_</span></a>
+    <button class="vl-sb-close" id="vl-sb-close" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="vl-sb-body">
+    <div class="vl-sb-section">
+      <span class="vl-sb-section-label">Navigate</span>
+      <a href="index.html" class="vl-sb-link" data-page="index">
+        <span class="vl-icon">⌂</span>Home
+      </a>
+      <a href="skill.html" class="vl-sb-link" data-page="skill">
+        <span class="vl-icon">◈</span>Skill
+      </a>
+      <a href="protocol.html" class="vl-sb-link" data-page="protocol">
+        <span class="vl-icon">⬡</span>Protocol
+      </a>
+      <a href="docs.html" class="vl-sb-link" data-page="docs">
+        <span class="vl-icon">◎</span>Docs
+      </a>
+      <a href="dashboard.html" class="vl-sb-link" data-page="dashboard">
+        <span class="vl-icon">▸</span>Dashboard
+        <span class="vl-sb-badge">LIVE</span>
+      </a>
+    </div>
+    <div class="vl-sb-section">
+      <span class="vl-sb-section-label">External</span>
+      <a href="https://github.com/vellum-finance/vellum-agent-skill" target="_blank" rel="noopener" class="vl-sb-link">
+        <span class="vl-icon">⌥</span>GitHub
+      </a>
+      <a href="https://x.com/vellum_fi" target="_blank" rel="noopener" class="vl-sb-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @vellum_fi
+      </a>
+    </div>
+  </div>
+  <div class="vl-sb-footer">
+    <div class="vl-sb-copy">© 2025 VELLUM · BUILT ON BASE</div>
+  </div>
+</div>
+
+<!-- VL HAMBURGER TOGGLE -->
+<button id="vl-toggle" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div id="vignette"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">VELLUM<span class="blink">_</span></a>
+  <ul class="nav-links">
+    <li class="hide-sm"><a href="skill.html">SKILL</a></li>
+    <li class="hide-sm"><a href="protocol.html">PROTOCOL</a></li>
+    <li class="hide-sm"><a href="docs.html" class="active">DOCS</a></li>
+  </ul>
+</nav>
+
+<div class="docs-layout">
+  <!-- SIDEBAR -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Getting Started</div>
+      <a href="#install" class="sidebar-link active">Installation</a>
+      <a href="#activate" class="sidebar-link">Activation</a>
+      <a href="#structure" class="sidebar-link">Structure</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Commands</div>
+      <a href="#register" class="sidebar-link">Agent Register</a>
+      <a href="#buy" class="sidebar-link">Buy Token</a>
+      <a href="#sell" class="sidebar-link">Sell Token</a>
+      <a href="#transfer" class="sidebar-link">Transfer Assets</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Reference</div>
+      <a href="#security" class="sidebar-link">Security</a>
+      <a href="#compatibility" class="sidebar-link">Compatibility</a>
+      <a href="#license" class="sidebar-link">License</a>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="docs-content">
+
+    <div class="doc-section" id="install">
+      <span class="doc-section-tag">GETTING STARTED</span>
+      <h2 class="doc-section-title">Installation</h2>
+      <div class="doc-section-body">
+        <p>Install the Vellum skill with a single command. No configuration files, no API keys needed upfront.</p>
+      </div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">install</span>
+          <button class="copy-btn" data-copy="npx skills add https://github.com/vellum-finance/vellum-agent-skill">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">npx</span> skills add <span class="cs">https://github.com/vellum-finance/vellum-agent-skill</span></div>
+      </div>
+      <div class="doc-section-body"><p>Or install with the <code style="font-family:var(--code);color:var(--amber);">--force</code> flag to overwrite an existing install:</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">install --force</span>
+          <button class="copy-btn" data-copy="npx skills add https://github.com/Vellum-finance/vellum-agent-skill --force">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">npx</span> skills add <span class="cs">https://github.com/Vellum-finance/vellum-agent-skill</span> --force</div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="activate">
+      <span class="doc-section-tag">GETTING STARTED</span>
+      <h2 class="doc-section-title">Activation</h2>
+      <div class="doc-section-body"><p>After installing, activate the skill as a global command so your agent can invoke it from anywhere.</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">activate</span>
+          <button class="copy-btn" data-copy="cd ~/.agents/skills/vellum && npm install -g">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">cd</span> ~/.agents/skills/vellum<br><span class="ck">npm</span> install -g</div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="structure">
+      <span class="doc-section-tag">GETTING STARTED</span>
+      <h2 class="doc-section-title">Repository Structure</h2>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">structure</span>
+        </div>
+        <div class="code-body"><span class="cc">vellum-agent-skill/</span>
+├── skills/
+│   └── vellum/
+│       └── <span class="cs">SKILL.md</span>
+├── <span class="ck">cli.js</span>
+├── <span class="ck">package.json</span>
+├── README.md
+└── <span class="cs">vellum-agents.json</span>  <span class="cc">← auto-generated</span></div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="register">
+      <span class="doc-section-tag">COMMANDS</span>
+      <h2 class="doc-section-title">Agent Register</h2>
+      <div class="doc-section-body"><p>Register your agent on Base. Generates a unique <strong>Agent ID</strong> and creates a <strong>Base wallet</strong> automatically. Run once per agent.</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">register</span>
+          <button class="copy-btn" data-copy="vellum register">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">vellum</span> register</div>
+      </div>
+      <div class="doc-section-body"><p>Output: Agent ID, wallet address, and a <code style="font-family:var(--code);color:var(--amber);">vellum-agents.json</code> file saved to your project directory.</p></div>
+    </div>
+
+    <div class="doc-section" id="buy">
+      <span class="doc-section-tag">COMMANDS</span>
+      <h2 class="doc-section-title">Buy Token</h2>
+      <div class="doc-section-body"><p>Buy any token on Base using its contract address. Specify the amount in ETH.</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">buy</span>
+          <button class="copy-btn" data-copy="vellum buy --token 0xCONTRACT_ADDRESS --amount 0.01">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">vellum</span> buy --token <span class="cs">0xCONTRACT_ADDRESS</span> --amount <span class="cs">0.01</span></div>
+      </div>
+      <table class="cmd-table">
+        <tr><th>Flag</th><th>Type</th><th>Description</th></tr>
+        <tr><td>--token</td><td>address</td><td>Contract address of the token to buy</td></tr>
+        <tr><td>--amount</td><td>ETH</td><td>Amount of ETH to spend</td></tr>
+      </table>
+    </div>
+
+    <div class="doc-section" id="sell">
+      <span class="doc-section-tag">COMMANDS</span>
+      <h2 class="doc-section-title">Sell Token</h2>
+      <div class="doc-section-body"><p>Sell a token back to ETH. Specify the token address and amount to sell.</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">sell</span>
+          <button class="copy-btn" data-copy="vellum sell --token 0xCONTRACT_ADDRESS --amount 1000">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">vellum</span> sell --token <span class="cs">0xCONTRACT_ADDRESS</span> --amount <span class="cs">1000</span></div>
+      </div>
+    </div>
+
+    <div class="doc-section" id="transfer">
+      <span class="doc-section-tag">COMMANDS</span>
+      <h2 class="doc-section-title">Transfer Assets</h2>
+      <div class="doc-section-body"><p>Send ETH or USDC to any address. Private key is prompted interactively and never stored.</p></div>
+      <div class="code-block">
+        <div class="code-topbar">
+          <div class="code-dots"><div class="cdot cdot-r"></div><div class="cdot cdot-y"></div><div class="cdot cdot-g"></div></div>
+          <span class="code-fname">transfer</span>
+          <button class="copy-btn" data-copy="vellum transfer --to 0xADDRESS --amount 0.05 --asset ETH">COPY</button>
+        </div>
+        <div class="code-body"><span class="ck">vellum</span> transfer --to <span class="cs">0xADDRESS</span> --amount <span class="cs">0.05</span> --asset <span class="cs">ETH</span></div>
+      </div>
+      <table class="cmd-table">
+        <tr><th>Flag</th><th>Type</th><th>Description</th></tr>
+        <tr><td>--to</td><td>address</td><td>Recipient wallet address</td></tr>
+        <tr><td>--amount</td><td>number</td><td>Amount to send</td></tr>
+        <tr><td>--asset</td><td>ETH · USDC</td><td>Asset type to transfer</td></tr>
+      </table>
+    </div>
+
+    <div class="doc-section" id="security">
+      <span class="doc-section-tag">REFERENCE</span>
+      <h2 class="doc-section-title">Security</h2>
+      <div class="doc-section-body">
+        <p>Private keys are <strong>prompted interactively</strong> and handled in-memory only. They are never written to disk, never echoed to the terminal, and never logged.</p>
+        <p>Agent wallets are <strong>non-custodial</strong> — Vellum never holds your keys. The <code style="font-family:var(--code);color:var(--amber);">vellum-agents.json</code> file stores only public metadata (Agent ID, wallet address).</p>
+      </div>
+    </div>
+
+    <div class="doc-section" id="compatibility">
+      <span class="doc-section-tag">REFERENCE</span>
+      <h2 class="doc-section-title">Compatibility</h2>
+      <div class="doc-section-body"><p>Works with all major AI agent frameworks:</p></div>
+      <table class="cmd-table">
+        <tr><th>Agent</th><th>Status</th></tr>
+        <tr><td>Claude (Anthropic)</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Gemini (Google)</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>GPT (OpenAI)</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Grok (xAI)</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Cursor</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Hermes</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Openclaw</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+        <tr><td>Any MCP Agent</td><td style="color:#4CAF50;">✓ Supported</td></tr>
+      </table>
+    </div>
+
+    <div class="doc-section" id="license">
+      <span class="doc-section-tag">REFERENCE</span>
+      <h2 class="doc-section-title">License</h2>
+      <div class="doc-section-body">
+        <p>Vellum Agent Skill is licensed under the <strong>MIT License</strong>. Free to use, modify, fork, and distribute for both personal and commercial purposes.</p>
+        <p style="margin-top:0.8rem;"><a href="https://github.com/vellum-finance/vellum-agent-skill" target="_blank" rel="noopener" style="font-family:var(--code);font-size:0.8rem;color:var(--amber);text-decoration:none;letter-spacing:0.05em;">github.com/vellum-finance/vellum-agent-skill →</a></p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">VELLUM</div>
+    <div class="footer-links">
+      <a href="skill.html">Skill</a>
+      <a href="protocol.html">Protocol</a>
+      <a href="https://x.com/vellum_fi" target="_blank" rel="noopener" class="x-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <div class="footer-copy">© 2025 VELLUM · BUILT ON BASE</div>
+  </div>
+</footer>
+<script>
+function fb(t,cb){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;top:-9999px;opacity:0;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');cb();}catch(e){}document.body.removeChild(ta);}
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const cmd=this.dataset.copy;const self=this;
+    function ok(){self.textContent='COPIED ✓';self.classList.add('ok');setTimeout(()=>{self.textContent='COPY';self.classList.remove('ok');},2000);}
+    if(navigator.clipboard){navigator.clipboard.writeText(cmd).then(ok).catch(()=>fb(cmd,ok));}else{fb(cmd,ok);}
+  });
+});
+// highlight active sidebar link on scroll
+const sections=document.querySelectorAll('.doc-section[id]');
+const links=document.querySelectorAll('.sidebar-link');
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);if(a)a.classList.add('active');}});},{threshold:0.4});
+sections.forEach(s=>io.observe(s));
+</script>
+<script>
+// ── Vellum Sidebar ──────────────────────────────
+(function(){
+  const sidebar=document.getElementById('vl-sidebar');
+  const overlay=document.getElementById('vl-overlay');
+  const toggle=document.getElementById('vl-toggle');
+  const closeBtn=document.getElementById('vl-sb-close');
+  function open(){sidebar.classList.add('open');overlay.classList.add('show');toggle.classList.add('open');toggle.setAttribute('aria-expanded','true');}
+  function close(){sidebar.classList.remove('open');overlay.classList.remove('show');toggle.classList.remove('open');toggle.setAttribute('aria-expanded','false');}
+  toggle.addEventListener('click',function(){sidebar.classList.contains('open')?close():open();});
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  // Highlight active page
+  const path=location.pathname.split('/').pop()||'index.html';
+  const key=path.replace('.html','').replace('index__1_','index')||'index';
+  const link=sidebar.querySelector('[data-page="'+key+'"]');
+  if(link)link.classList.add('active');
+})();
+</script>
+</body>
+</html>

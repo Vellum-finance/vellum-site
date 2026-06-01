@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELLUM DASHBOARD</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3E5AB;--panel:#FDF8EC;--panel-2:#FAF3D3;--ink:#1A1410;--ink-2:#3D3020;--ink-3:#6B5B3E;--ink-4:#A89070;--amber:#C4820A;--amber-dim:rgba(196,130,10,0.08);--line:rgba(26,20,16,0.15);--line-2:rgba(26,20,16,0.08);--green:#4CAF50;--maxw:960px;--mono:'VT323',monospace;--body:'DM Sans',sans-serif;--code:'Share Tech Mono',monospace;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7;min-height:100vh;overflow-x:hidden;position:relative;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(26,20,16,0.03) 2px,rgba(26,20,16,0.03) 4px);}
+#vignette{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 80% at 50% 50%,transparent 50%,rgba(26,20,16,0.18) 100%);}
+nav,main,footer{position:relative;z-index:10;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:52px;background:rgba(243,229,171,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:var(--mono);font-size:1.6rem;color:var(--ink);letter-spacing:0.12em;text-decoration:none;}
+.nav-logo .blink{color:var(--amber);animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:1.8rem;list-style:none;align-items:center;}
+.nav-links a{text-decoration:none;font-family:var(--code);font-size:0.8rem;color:var(--ink-3);letter-spacing:0.08em;text-transform:uppercase;transition:color 0.15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--amber);}
+.nav-badge{font-family:var(--code);font-size:0.72rem;padding:0.3rem 0.9rem;border:1px solid var(--amber);color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;background:var(--amber-dim);transition:all 0.15s;text-decoration:none;}
+.nav-badge:hover{background:var(--amber);color:var(--bg);}
+.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;animation:pulse-dot 2s ease infinite;vertical-align:middle;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,0.4)}50%{box-shadow:0 0 0 5px rgba(76,175,80,0)}}
+main{max-width:var(--maxw);margin:0 auto;padding:72px 2rem 4rem;}
+.dash-hero{padding:2.5rem 0 2rem;border-bottom:1px solid var(--line);margin-bottom:2rem;}
+.dash-tag{font-family:var(--code);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber);margin-bottom:0.5rem;display:block;}
+.dash-title{font-family:var(--mono);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.06em;color:var(--ink);line-height:1.1;}
+.dash-coming{background:var(--ink);padding:3rem 2.5rem;text-align:center;position:relative;overflow:hidden;margin-bottom:1.5rem;}
+.dash-coming::before{content:'DASHBOARD';position:absolute;font-family:var(--mono);font-size:10rem;color:rgba(243,229,171,0.04);left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:0.1em;}
+.soon-tag{font-family:var(--code);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);border:1px solid rgba(196,130,10,0.4);padding:0.2rem 0.8rem;display:inline-block;margin-bottom:1.5rem;animation:pulse-tag 2s ease infinite;}
+@keyframes pulse-tag{0%,100%{opacity:1}50%{opacity:0.5}}
+.dash-coming-title{font-family:var(--mono);font-size:clamp(3rem,7vw,5rem);color:var(--bg);letter-spacing:0.1em;margin-bottom:1rem;line-height:1;}
+.dash-coming-sub{font-size:0.9rem;color:rgba(243,229,171,0.5);max-width:460px;margin:0 auto 2rem;line-height:1.7;}
+.preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(243,229,171,0.15);border:1px solid rgba(243,229,171,0.15);margin-top:2rem;}
+.preview-tile{background:rgba(26,20,16,0.4);padding:1.4rem;text-align:left;}
+.preview-tile-label{font-family:var(--code);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(243,229,171,0.35);margin-bottom:0.5rem;}
+.preview-tile-val{font-family:var(--mono);font-size:1.8rem;color:rgba(243,229,171,0.2);letter-spacing:0.04em;}
+.preview-tile-sub{font-family:var(--code);font-size:0.62rem;color:rgba(243,229,171,0.2);margin-top:0.2rem;}
+.panel{background:var(--panel);border:1px solid var(--line);margin-bottom:1.5rem;overflow:hidden;}
+.panel-header{display:flex;align-items:center;justify-content:space-between;padding:0.7rem 1.2rem;border-bottom:1px solid var(--line);background:var(--panel-2);}
+.panel-title{font-family:var(--code);font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);}
+.panel-title .num{color:var(--amber);margin-right:0.5rem;}
+.panel-badge{font-family:var(--code);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.15rem 0.6rem;border:1px solid var(--line);color:var(--ink-4);}
+.panel-badge.live{border-color:var(--amber);color:var(--amber);background:var(--amber-dim);}
+.panel-body{padding:1.4rem;}
+.roadmap-item{display:flex;gap:1.2rem;padding:0.9rem 0;border-bottom:1px solid var(--line-2);align-items:flex-start;}
+.roadmap-item:last-child{border-bottom:none;}
+.roadmap-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.roadmap-dot.done{background:var(--green);}
+.roadmap-dot.active{background:var(--amber);animation:pulse-dot 1.5s ease infinite;}
+.roadmap-dot.soon{background:transparent;border:1px solid var(--ink-4);}
+.roadmap-title{font-family:var(--code);font-size:0.82rem;letter-spacing:0.06em;color:var(--ink);margin-bottom:0.2rem;}
+.roadmap-desc{font-size:0.85rem;color:var(--ink-3);line-height:1.6;}
+.roadmap-status{font-family:var(--code);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;margin-left:auto;flex-shrink:0;padding:0.1rem 0.5rem;border:1px solid var(--line);}
+.roadmap-status.done-tag{border-color:var(--green);color:var(--green);}
+.roadmap-status.active-tag{border-color:var(--amber);color:var(--amber);}
+.roadmap-status.soon-tag-sm{color:var(--ink-4);}
+.notify-form{display:flex;gap:0;border:1px solid var(--line);max-width:440px;margin:0 auto;}
+.notify-input{flex:1;background:transparent;border:none;outline:none;padding:0.75rem 1rem;font-family:var(--code);font-size:0.8rem;color:var(--ink);letter-spacing:0.04em;}
+.notify-input::placeholder{color:var(--ink-4);}
+.notify-btn{font-family:var(--code);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.75rem 1.2rem;background:var(--ink);color:var(--bg);border:none;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.notify-btn:hover{background:var(--amber);}
+footer{border-top:1px solid var(--line);padding:2rem;max-width:var(--maxw);margin:0 auto;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-logo{font-family:var(--mono);font-size:1.2rem;color:var(--ink-3);letter-spacing:0.1em;}
+.footer-links{display:flex;gap:1.5rem;align-items:center;}
+.footer-links a{font-family:var(--code);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);text-decoration:none;transition:color 0.15s;}
+.footer-links a:hover{color:var(--amber);}
+.x-link{display:inline-flex;align-items:center;color:var(--ink-4);text-decoration:none;transition:color 0.15s;}
+.x-link:hover{color:var(--amber);}
+.footer-copy{font-family:var(--code);font-size:0.65rem;color:var(--ink-4);}
+@media(max-width:768px){.preview-grid{grid-template-columns:1fr;}}
+@media(max-width:640px){nav{padding:0 1rem;}.nav-links{gap:0.8rem;}.nav-links li.hide-sm{display:none;}main{padding:72px 1rem 3rem;}.dash-coming{padding:2rem 1.2rem;}.roadmap-item{gap:0.8rem;}footer{padding:1.5rem 1rem;}.footer-inner{flex-direction:column;align-items:flex-start;}}
+
+
+/* ═══════════════════════════════════════
+   BEZEL / PILL BORDER-RADIUS SYSTEM
+═══════════════════════════════════════ */
+:root{
+  --radius-pill: 999px;    /* full pill — badge, dot, input */
+  --radius-lg:   18px;     /* panel card, code block */
+  --radius-md:   12px;     /* inner header bar, feature tile */
+  --radius-sm:   8px;      /* small badge, status tag, btn */
+  --gap-card:    1.6rem;   /* spacing between cards */
+}
+
+/* ── Cards / Panels ──────────────────────────────────── */
+.panel{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  margin-bottom: var(--gap-card) !important;
+}
+.panel-header{
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+}
+.code-block{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+.code-topbar{
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+}
+
+/* ── Feature grid tiles ──────────────────────────────── */
+.feature-grid{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  gap: 2px !important;
+}
+.feature-tile{
+  border-radius: 0 !important;
+}
+/* Corner tiles get radius */
+.feature-tile:first-child{ border-radius: var(--radius-lg) 0 0 var(--radius-lg) !important; }
+.feature-tile:last-child{  border-radius: 0 var(--radius-lg) var(--radius-lg) 0 !important; }
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn-primary,
+.btn-outline{
+  border-radius: var(--radius-pill) !important;
+  padding-left: 2.2rem !important;
+  padding-right: 2.2rem !important;
+}
+
+/* ── Nav badge / Dashboard pill ──────────────────────── */
+.nav-badge{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.3rem 1.1rem !important;
+}
+
+/* ── Panel badges ────────────────────────────────────── */
+.panel-badge{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.18rem 0.85rem !important;
+}
+
+/* ── Roadmap status tags ─────────────────────────────── */
+[class*="roadmap-status"],
+.roadmap-status,
+.roadmap-status.done-tag,
+.roadmap-status.active-tag,
+.roadmap-status.soon-tag-sm,
+.soon-tag{
+  border-radius: var(--radius-pill) !important;
+  padding: 0.18rem 0.8rem !important;
+}
+
+/* ── Agent pills ─────────────────────────────────────── */
+.agent-pill{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Copy button ─────────────────────────────────────── */
+.copy-btn,
+.notify-btn,
+#copy-btn{
+  border-radius: var(--radius-sm) !important;
+}
+
+/* ── Notify form ─────────────────────────────────────── */
+.notify-form{
+  border-radius: var(--radius-pill) !important;
+  overflow: hidden;
+}
+.notify-input{
+  border-radius: var(--radius-pill) 0 0 var(--radius-pill) !important;
+}
+.notify-btn{
+  border-radius: 0 var(--radius-pill) var(--radius-pill) 0 !important;
+}
+
+/* ── Inline tech spec badges (agent-compat pills) ─────── */
+[style*="border:1px solid var(--amber)"][style*="padding:0.3rem"]{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Dashboard preview tiles ─────────────────────────── */
+.preview-grid{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  gap: 2px !important;
+  background: rgba(243,229,171,0.15) !important;
+}
+.preview-tile{
+  border-radius: 0 !important;
+}
+.preview-tile:first-child{ border-radius: var(--radius-lg) 0 0 0 !important; }
+.preview-tile:last-child{  border-radius: 0 var(--radius-lg) 0 0 !important; }
+
+/* ── Diagram rows ────────────────────────────────────── */
+.diag-row:first-child{ border-radius: var(--radius-md) var(--radius-md) 0 0 !important; }
+.diag-row:last-child{  border-radius: 0 0 var(--radius-md) var(--radius-md) !important; }
+
+/* ── Terminal window inner container ─────────────────── */
+[style*="background:rgba(26,20,16,0.06)"],
+[style*="background: rgba(26,20,16,0.06)"]{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+}
+
+/* ── Page hero border bottom stays flat ─────────────────*/
+.page-hero, .dash-hero{ border-radius: 0 !important; }
+
+/* ── Dashboard coming-soon card ──────────────────────── */
+.dash-coming{
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden;
+  margin-bottom: var(--gap-card) !important;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+footer{ border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important; margin-top: 1rem; }
+
+/* ── Spacing between sections ────────────────────────── */
+.divider{ margin: 2.2rem 0 !important; }
+.panel + .divider,
+.divider + .panel{ margin-top: 0.8rem !important; }
+
+/* ── Sidebar bezel ───────────────────────────────────── */
+#vl-sidebar{
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0 !important;
+}
+.vl-sb-link{
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ── Docs sidebar links ──────────────────────────────── */
+.sidebar-link{ border-radius: var(--radius-pill) !important; padding: 0.28rem 0.8rem !important; }
+.sidebar-link:hover,.sidebar-link.active{ background: var(--amber-dim) !important; }
+
+/* ── Cmd table cells (docs) ──────────────────────────── */
+.cmd-table th:first-child{ border-radius: var(--radius-md) 0 0 0 !important; }
+.cmd-table th:last-child{  border-radius: 0 var(--radius-md) 0 0 !important; }
+
+/* ── Inline terminal from index/skill ───────────────────*/
+div[style*="border:1px solid var(--line)"][style*="overflow:hidden"]{
+  border-radius: var(--radius-lg) !important;
+}
+
+/* ═══════════════════════════════════════
+   LEFT SIDEBAR NAV
+═══════════════════════════════════════ */
+#vl-sidebar{
+  position:fixed;top:0;left:0;bottom:0;z-index:200;
+  width:220px;transform:translateX(-100%);
+  background:rgba(243,229,171,0.97);backdrop-filter:blur(20px);
+  border-right:1px solid rgba(26,20,16,0.15);
+  display:flex;flex-direction:column;
+  padding:0;
+  transition:transform 0.28s cubic-bezier(.4,0,.2,1);
+  box-shadow:4px 0 24px rgba(26,20,16,0.08);
+}
+#vl-sidebar.open{transform:translateX(0);}
+.vl-sb-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.2rem;height:52px;
+  border-bottom:1px solid rgba(26,20,16,0.12);flex-shrink:0;
+}
+.vl-sb-logo{font-family:var(--mono);font-size:1.4rem;color:var(--ink);letter-spacing:0.12em;text-decoration:none;}
+.vl-sb-logo .blink{color:var(--amber);animation:blink 1.2s step-end infinite;}
+.vl-sb-close{background:none;border:none;cursor:pointer;color:var(--ink-4);padding:4px;display:flex;align-items:center;transition:color 0.15s;}
+.vl-sb-close:hover{color:var(--amber);}
+.vl-sb-body{flex:1;overflow-y:auto;padding:1.4rem 1.2rem;}
+.vl-sb-section{margin-bottom:1.8rem;}
+.vl-sb-section-label{
+  font-family:var(--code);font-size:0.58rem;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--ink-4);margin-bottom:0.6rem;
+  display:block;padding-bottom:0.4rem;border-bottom:1px solid rgba(26,20,16,0.1);
+}
+.vl-sb-link{
+  display:flex;align-items:center;gap:0.6rem;
+  font-family:var(--code);font-size:0.74rem;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  padding:0.45rem 0.7rem;border-radius:5px;
+  transition:all 0.15s;margin-bottom:2px;
+}
+.vl-sb-link:hover{background:var(--amber-dim);color:var(--amber);}
+.vl-sb-link.active{background:var(--amber-dim);color:var(--amber);border-left:2px solid var(--amber);padding-left:calc(0.7rem - 2px);}
+.vl-sb-link .vl-icon{font-size:1rem;line-height:1;width:18px;text-align:center;flex-shrink:0;}
+.vl-sb-badge{
+  font-family:var(--code);font-size:0.6rem;letter-spacing:0.08em;
+  padding:0.1rem 0.5rem;border-radius:4px;margin-left:auto;
+  border:1px solid var(--amber);color:var(--amber);background:var(--amber-dim);
+}
+.vl-sb-footer{
+  padding:1rem 1.2rem;border-top:1px solid rgba(26,20,16,0.1);
+  flex-shrink:0;
+}
+.vl-sb-socials{display:flex;gap:0.8rem;align-items:center;}
+.vl-sb-socials a{color:var(--ink-4);text-decoration:none;transition:color 0.15s;display:flex;align-items:center;}
+.vl-sb-socials a:hover{color:var(--amber);}
+.vl-sb-copy{font-family:var(--code);font-size:0.6rem;color:var(--ink-4);margin-top:0.6rem;}
+
+/* Sidebar toggle button (top-left, always visible) */
+#vl-toggle{
+  position:fixed;top:12px;left:12px;z-index:300;
+  background:rgba(243,229,171,0.9);border:1px solid rgba(26,20,16,0.15);
+  border-radius:6px;width:30px;height:28px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;
+  cursor:pointer;transition:all 0.15s;padding:0;backdrop-filter:blur(8px);
+}
+#vl-toggle:hover{border-color:var(--amber);background:var(--amber-dim);}
+#vl-toggle span{display:block;width:14px;height:1.5px;background:var(--ink);border-radius:2px;transition:all 0.2s;}
+#vl-toggle.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+#vl-toggle.open span:nth-child(2){opacity:0;}
+#vl-toggle.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+/* Overlay backdrop */
+#vl-overlay{
+  position:fixed;inset:0;z-index:150;background:rgba(26,20,16,0.3);
+  opacity:0;pointer-events:none;transition:opacity 0.28s;backdrop-filter:blur(2px);
+}
+#vl-overlay.show{opacity:1;pointer-events:auto;}
+
+/* Nav: push logo right to make room for toggle btn */
+nav{padding-left:3.2rem !important;}
+
+</style>
+<style>
+/* extra breathing room */
+main > .panel,
+main > .feature-grid,
+main > .dash-coming{margin-bottom:1.8rem !important;}
+.roadmap-item{gap:1rem !important;padding:1.1rem 0 !important;}
+.feature-row{gap:1.6rem !important;padding:1.4rem 0 !important;}
+.panel-body{padding:1.6rem !important;}
+</style>
+</head>
+<body>
+<!-- VL SIDEBAR OVERLAY -->
+<div id="vl-overlay"></div>
+
+<!-- VL SIDEBAR -->
+<div id="vl-sidebar" role="navigation" aria-label="Site navigation">
+  <div class="vl-sb-header">
+    <a href="index.html" class="vl-sb-logo">VL<span class="blink">_</span></a>
+    <button class="vl-sb-close" id="vl-sb-close" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="vl-sb-body">
+    <div class="vl-sb-section">
+      <span class="vl-sb-section-label">Navigate</span>
+      <a href="index.html" class="vl-sb-link" data-page="index">
+        <span class="vl-icon">⌂</span>Home
+      </a>
+      <a href="skill.html" class="vl-sb-link" data-page="skill">
+        <span class="vl-icon">◈</span>Skill
+      </a>
+      <a href="protocol.html" class="vl-sb-link" data-page="protocol">
+        <span class="vl-icon">⬡</span>Protocol
+      </a>
+      <a href="docs.html" class="vl-sb-link" data-page="docs">
+        <span class="vl-icon">◎</span>Docs
+      </a>
+      <a href="dashboard.html" class="vl-sb-link" data-page="dashboard">
+        <span class="vl-icon">▸</span>Dashboard
+        <span class="vl-sb-badge">LIVE</span>
+      </a>
+    </div>
+    <div class="vl-sb-section">
+      <span class="vl-sb-section-label">External</span>
+      <a href="https://github.com/vellum-finance/vellum-agent-skill" target="_blank" rel="noopener" class="vl-sb-link">
+        <span class="vl-icon">⌥</span>GitHub
+      </a>
+      <a href="https://x.com/vellum_fi" target="_blank" rel="noopener" class="vl-sb-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        @vellum_fi
+      </a>
+    </div>
+  </div>
+  <div class="vl-sb-footer">
+    <div class="vl-sb-copy">© 2025 VELLUM · BUILT ON BASE</div>
+  </div>
+</div>
+
+<!-- VL HAMBURGER TOGGLE -->
+<button id="vl-toggle" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div id="vignette"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">VELLUM<span class="blink">_</span></a>
+  <ul class="nav-links">
+    <li class="hide-sm"><a href="skill.html">SKILL</a></li>
+    <li class="hide-sm"><a href="protocol.html">PROTOCOL</a></li>
+    <li class="hide-sm"><a href="docs.html">DOCS</a></li>
+    <li><a href="dashboard.html" class="nav-badge active"><span class="status-dot"></span>DASHBOARD</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="dash-hero">
+    <span class="dash-tag">▸ VELLUM · AGENT DASHBOARD</span>
+    <h1 class="dash-title">DASHBOARD</h1>
+  </div>
+
+  <!-- COMING SOON HERO CARD -->
+  <div class="dash-coming">
+    <span class="soon-tag">▸ COMING SOON</span>
+    <h2 class="dash-coming-title">AGENT<br>CONTROL</h2>
+    <p class="dash-coming-sub">A full on-chain dashboard for your Vellum agents — live wallet balances, transaction history, meme coin positions, and agent status all in one place.</p>
+    <div class="preview-grid">
+      <div class="preview-tile">
+        <div class="preview-tile-label">Wallet Balance</div>
+        <div class="preview-tile-val">—.—</div>
+        <div class="preview-tile-sub">ETH · Base Mainnet</div>
+      </div>
+      <div class="preview-tile">
+        <div class="preview-tile-label">Active Agents</div>
+        <div class="preview-tile-val">—</div>
+        <div class="preview-tile-sub">Registered on-chain</div>
+      </div>
+      <div class="preview-tile">
+        <div class="preview-tile-label">Transactions</div>
+        <div class="preview-tile-val">—</div>
+        <div class="preview-tile-sub">Total executed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title"><span class="num">✦</span>ROADMAP</span>
+      <span class="panel-badge live">IN PROGRESS</span>
+    </div>
+    <div class="panel-body">
+      <div class="roadmap-item">
+        <div class="roadmap-dot done"></div>
+        <div>
+          <div class="roadmap-title">Vellum Agent Skill</div>
+          <p class="roadmap-desc">CLI skill for agent registration, meme coin trading, and asset transfer on Base. MIT licensed and open source.</p>
+        </div>
+        <span class="roadmap-status done-tag">LIVE</span>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot done"></div>
+        <div>
+          <div class="roadmap-title">Multi-Agent Compatibility</div>
+          <p class="roadmap-desc">Works with Claude, Gemini, GPT, Grok, Cursor, Hermes, Openclaw, and any MCP agent framework.</p>
+        </div>
+        <span class="roadmap-status done-tag">LIVE</span>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot active"></div>
+        <div>
+          <div class="roadmap-title">Agent Dashboard</div>
+          <p class="roadmap-desc">Real-time wallet balances, transaction history, and agent status. Full on-chain visibility for your agents.</p>
+        </div>
+        <span class="roadmap-status active-tag">BUILDING</span>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot soon"></div>
+        <div>
+          <div class="roadmap-title">Portfolio View</div>
+          <p class="roadmap-desc">Track all token positions, P&L, and transaction history per agent across Base mainnet.</p>
+        </div>
+        <span class="roadmap-status soon-tag-sm">SOON</span>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot soon"></div>
+        <div>
+          <div class="roadmap-title">Automated Strategies</div>
+          <p class="roadmap-desc">Set rules for your agents — auto-buy, stop-loss, take-profit — all executed autonomously on-chain.</p>
+        </div>
+        <span class="roadmap-status soon-tag-sm">SOON</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFY -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title"><span class="num">▸</span>GET NOTIFIED</span>
+      <span class="panel-badge">UPDATES</span>
+    </div>
+    <div class="panel-body" style="text-align:center;">
+      <p style="font-size:0.9rem;color:var(--ink-3);margin-bottom:1.5rem;">Follow <a href="https://x.com/vellum_fi" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;font-family:var(--code);">@vellum_fi</a> on X for updates, or drop your email to be notified when the dashboard launches.</p>
+      <div class="notify-form">
+        <input type="email" id="notify-email" class="notify-input" placeholder="your@email.com">
+        <button id="notify-btn" class="notify-btn">NOTIFY ME →</button>
+      </div>
+      <p style="font-family:var(--code);font-size:0.62rem;color:var(--ink-4);margin-top:0.8rem;letter-spacing:0.06em;">NO SPAM · LAUNCH NOTIFICATION ONLY</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">VELLUM</div>
+    <div class="footer-links">
+      <a href="skill.html">Skill</a>
+      <a href="protocol.html">Protocol</a>
+      <a href="docs.html">Docs</a>
+      <a href="https://x.com/vellum_fi" target="_blank" rel="noopener" class="x-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+    <div class="footer-copy">© 2025 VELLUM · BUILT ON BASE</div>
+  </div>
+</footer>
+<script>
+document.getElementById('notify-btn').addEventListener('click',function(){
+  const inp=document.getElementById('notify-email');
+  if(inp.value.includes('@')){
+    this.textContent='✓ NOTED';this.style.background='#4CAF50';
+    inp.value='';inp.placeholder='SEE YOU SOON ⟡';
+  }else{
+    inp.style.outline='1px solid var(--amber)';inp.placeholder='ENTER VALID EMAIL';inp.value='';
+  }
+});
+document.getElementById('notify-email').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('notify-btn').click();});
+</script>
+<script>
+// ── Vellum Sidebar ──────────────────────────────
+(function(){
+  const sidebar=document.getElementById('vl-sidebar');
+  const overlay=document.getElementById('vl-overlay');
+  const toggle=document.getElementById('vl-toggle');
+  const closeBtn=document.getElementById('vl-sb-close');
+  function open(){sidebar.classList.add('open');overlay.classList.add('show');toggle.classList.add('open');toggle.setAttribute('aria-expanded','true');}
+  function close(){sidebar.classList.remove('open');overlay.classList.remove('show');toggle.classList.remove('open');toggle.setAttribute('aria-expanded','false');}
+  toggle.addEventListener('click',function(){sidebar.classList.contains('open')?close():open();});
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  // Highlight active page
+  const path=location.pathname.split('/').pop()||'index.html';
+  const key=path.replace('.html','').replace('index__1_','index')||'index';
+  const link=sidebar.querySelector('[data-page="'+key+'"]');
+  if(link)link.classList.add('active');
+})();
+</script>
+</body>
+</html>
